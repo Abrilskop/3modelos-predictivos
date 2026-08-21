@@ -374,25 +374,25 @@ with col_left:
     """, unsafe_allow_html=True)
 
     st.markdown("**Variables Seleccionadas (6 de 11):**")
-    st.markdown("""
-    | Variable | Descripcion | Importancia |
-    |----------|-------------|-------------|
-    | `alcohol` | Contenido de alcohol (% vol) | ⭐⭐⭐⭐⭐ |
-    | `volatile acidity` | Acidez volatil (g/dm³) | ⭐⭐⭐⭐ |
-    | `sulphates` | Sulphatos (g/dm³) | ⭐⭐⭐ |
-    | `citric acid` | Acido citrico (g/dm³) | ⭐⭐⭐ |
-    | `density` | Densidad (g/cm³) | ⭐⭐⭐ |
-    | `chlorides` | Cloruros/sal (g/dm³) | ⭐⭐ |
-    """)
+    st.markdown(
+"| Variable | Descripcion | Importancia |\n"
+"|----------|-------------|-------------|\n"
+"| `alcohol` | Contenido de alcohol (% vol) | ⭐⭐⭐⭐⭐ |\n"
+"| `volatile acidity` | Acidez volatil (g/dm³) | ⭐⭐⭐⭐ |\n"
+"| `sulphates` | Sulphatos (g/dm³) | ⭐⭐⭐ |\n"
+"| `citric acid` | Acido citrico (g/dm³) | ⭐⭐⭐ |\n"
+"| `density` | Densidad (g/cm³) | ⭐⭐⭐ |\n"
+"| `chlorides` | Cloruros/sal (g/dm³) | ⭐⭐ |"
+    )
 
     st.markdown("**Preprocesamiento:**")
-    st.markdown("""
-    - ✅ Sin valores nulos
-    - ✅ Duplicados eliminados
-    - ✅ Outliers tratados (IQR)
-    - ✅ Escalado: StandardScaler
-    - ✅ Multicolinealidad verificada (VIF)
-    """)
+    st.markdown(
+"- ✅ Sin valores nulos\n"
+"- ✅ Duplicados eliminados\n"
+"- ✅ Outliers tratados (IQR)\n"
+"- ✅ Escalado: StandardScaler\n"
+"- ✅ Multicolinealidad verificada (VIF)"
+    )
 
 with col_right:
     prediction = predict_quality(input_values)
