@@ -17,6 +17,11 @@ pages = [
         title="Caso 3: Diabetes",
         icon="🩺",
     ),
+    st.Page(
+        "caso3_diabetes_polinomial/app_diabetes_polinomial.py",
+        title="Caso 3b: Diabetes Polinomial",
+        icon="📈",
+    ),
 ]
 
 pg = st.navigation(pages)
