@@ -322,56 +322,39 @@ def generate_bottle_html(score, color, label):
     fill_percent = min(score / 10.0 * 100, 100)
     fill_height = int(fill_percent * 2.5)
 
-    bottle_html = f"""
-    <div class="bottle-container">
-        <div class="bottle-wrapper">
-            <svg class="bottle-svg" width="120" height="340" viewBox="0 0 120 340">
-                <!-- Sello superior -->
-                <rect x="44" y="0" width="32" height="15" rx="3" fill="#8B4513"/>
-                <rect x="46" y="5" width="28" height="8" rx="2" fill="#A0522D"/>
-
-                <!-- Cuello de la botella -->
-                <path d="M 48 15 L 48 80 Q 48 100 38 120 L 38 120" fill="none" stroke="#1a1a2e" stroke-width="4"/>
-                <path d="M 72 15 L 72 80 Q 72 100 82 120 L 82 120" fill="none" stroke="#1a1a2e" stroke-width="4"/>
-                <rect x="48" y="10" width="24" height="75" rx="2" fill="rgba(100,200,100,0.15)" stroke="#1a1a2e" stroke-width="3"/>
-
-                <!-- Cuerpo de la botella -->
-                <path d="M 38 120 Q 15 140 15 160 L 15 300 Q 15 325 40 325 L 80 325 Q 105 325 105 300 L 105 160 Q 105 140 82 120 Z"
-                      fill="rgba(100,200,100,0.12)" stroke="#1a1a2e" stroke-width="3"/>
-
-                <!-- Etiqueta -->
-                <rect x="25" y="200" width="70" height="70" rx="5" fill="white" stroke="#ccc" stroke-width="1"/>
-                <text x="60" y="225" text-anchor="middle" font-family="Playfair Display, serif" font-size="11" font-weight="700" fill="#2d1b33">WINE</text>
-                <text x="60" y="242" text-anchor="middle" font-family="Lato, sans-serif" font-size="8" fill="#666">QUALITY</text>
-                <line x1="35" y1="250" x2="85" y2="250" stroke="#8b3a62" stroke-width="1"/>
-                <text x="60" y="264" text-anchor="middle" font-family="Playfair Display, serif" font-size="14" font-weight="700" fill="{color}">{score:.1f}</text>
-
-                <!-- Base -->
-                <ellipse cx="60" cy="325" rx="45" ry="8" fill="rgba(100,200,100,0.08)" stroke="#1a1a2e" stroke-width="2"/>
-            </svg>
-
-            <!-- Licor interior -->
-            <div class="liquid" style="height: {fill_height}px; background: linear-gradient(180deg, {color}dd, {color}99);">
-                <div class="liquid-shimmer"></div>
-            </div>
-        </div>
-
-        <div class="quality-label" style="color: {color};">{score:.1f} / 10</div>
-        <div class="quality-text">Calidad: {label}</div>
-    </div>
-    """
+    bottle_html = f"""<div class="bottle-container">
+<div class="bottle-wrapper">
+<svg class="bottle-svg" width="120" height="340" viewBox="0 0 120 340">
+<rect x="44" y="0" width="32" height="15" rx="3" fill="#8B4513"/>
+<rect x="46" y="5" width="28" height="8" rx="2" fill="#A0522D"/>
+<path d="M 48 15 L 48 80 Q 48 100 38 120 L 38 120" fill="none" stroke="#1a1a2e" stroke-width="4"/>
+<path d="M 72 15 L 72 80 Q 72 100 82 120 L 82 120" fill="none" stroke="#1a1a2e" stroke-width="4"/>
+<rect x="48" y="10" width="24" height="75" rx="2" fill="rgba(100,200,100,0.15)" stroke="#1a1a2e" stroke-width="3"/>
+<path d="M 38 120 Q 15 140 15 160 L 15 300 Q 15 325 40 325 L 80 325 Q 105 325 105 300 L 105 160 Q 105 140 82 120 Z" fill="rgba(100,200,100,0.12)" stroke="#1a1a2e" stroke-width="3"/>
+<rect x="25" y="200" width="70" height="70" rx="5" fill="white" stroke="#ccc" stroke-width="1"/>
+<text x="60" y="225" text-anchor="middle" font-family="Playfair Display, serif" font-size="11" font-weight="700" fill="#2d1b33">WINE</text>
+<text x="60" y="242" text-anchor="middle" font-family="Lato, sans-serif" font-size="8" fill="#666">QUALITY</text>
+<line x1="35" y1="250" x2="85" y2="250" stroke="#8b3a62" stroke-width="1"/>
+<text x="60" y="264" text-anchor="middle" font-family="Playfair Display, serif" font-size="14" font-weight="700" fill="{color}">{score:.1f}</text>
+<ellipse cx="60" cy="325" rx="45" ry="8" fill="rgba(100,200,100,0.08)" stroke="#1a1a2e" stroke-width="2"/>
+</svg>
+<div class="liquid" style="height: {fill_height}px; background: linear-gradient(180deg, {color}dd, {color}99);">
+<div class="liquid-shimmer"></div>
+</div>
+</div>
+<div class="quality-label" style="color: {color};">{score:.1f} / 10</div>
+<div class="quality-text">Calidad: {label}</div>
+</div>"""
     return bottle_html
 
 # --- CONTENIDO PRINCIPAL ---
 col_left, col_right = st.columns([1, 1])
 
 with col_left:
-    st.markdown("""
-    <div class="section-card fade-in-left">
-        <h2 style="font-family: 'Playfair Display', serif; color: #2d1b33;">🔬 Fase A: Analisis Exploratorio</h2>
-        <p style="color: #6c757d;">Preprocesamiento del dataset Wine Quality (UCI)</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div class="section-card fade-in-left">
+<h2 style="font-family: 'Playfair Display', serif; color: #2d1b33;">🔬 Fase A: Analisis Exploratorio</h2>
+<p style="color: #6c757d;">Preprocesamiento del dataset Wine Quality (UCI)</p>
+</div>""", unsafe_allow_html=True)
 
     st.markdown("**Variables Seleccionadas (6 de 11):**")
     st.markdown(
@@ -398,10 +381,8 @@ with col_right:
     prediction = predict_quality(input_values)
     color, label, bg_color = get_quality_color(prediction)
 
-    st.markdown(f"""
-    <div class="result-card fade-in-right" style="background: {bg_color}; border: 2px solid {color}33;">
-        <h2 style="font-family: 'Playfair Display', serif; color: #2d1b33; margin-bottom: 0;">Prediccion de Calidad</h2>
-    """, unsafe_allow_html=True)
+    st.markdown(f"""<div class="result-card fade-in-right" style="background: {bg_color}; border: 2px solid {color}33;">
+<h2 style="font-family: 'Playfair Display', serif; color: #2d1b33; margin-bottom: 0;">Prediccion de Calidad</h2>""", unsafe_allow_html=True)
 
     # Botella animada
     bottle_html = generate_bottle_html(prediction, color, label)
@@ -422,30 +403,24 @@ st.markdown("""
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("""
-    <div class="metric-box">
-        <div class="metric-value">R²</div>
-        <div class="metric-label">Coeficiente de Determinacion</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div class="metric-box">
+<div class="metric-value">R²</div>
+<div class="metric-label">Coeficiente de Determinacion</div>
+</div>""", unsafe_allow_html=True)
     st.metric("Lineal", f"{metrics['R2']:.4f}")
 
 with col2:
-    st.markdown("""
-    <div class="metric-box">
-        <div class="metric-value">MAE</div>
-        <div class="metric-label">Error Absoluto Medio</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div class="metric-box">
+<div class="metric-value">MAE</div>
+<div class="metric-label">Error Absoluto Medio</div>
+</div>""", unsafe_allow_html=True)
     st.metric("Lineal", f"{metrics['MAE']:.4f}")
 
 with col3:
-    st.markdown("""
-    <div class="metric-box">
-        <div class="metric-value">RMSE</div>
-        <div class="metric-label">Raiz del Error Cuadratico</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div class="metric-box">
+<div class="metric-value">RMSE</div>
+<div class="metric-label">Raiz del Error Cuadratico</div>
+</div>""", unsafe_allow_html=True)
     st.metric("Lineal", f"{metrics['RMSE']:.4f}")
 
 st.info(f"**Modelo seleccionado:** {model_name} | **Grado polinomial:** {degree}")
