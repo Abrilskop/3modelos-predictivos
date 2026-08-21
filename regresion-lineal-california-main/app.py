@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,6 +8,8 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 st.set_page_config(page_title="Simulador de Precios - California Housing", layout="wide")
 
 st.title("Simulador de Precios de Viviendas en California")
@@ -15,9 +18,9 @@ st.markdown("Modelo de **Regresión Lineal Múltiple** entrenado con el dataset 
 
 @st.cache_data
 def load_and_process_data():
-    df = pd.read_csv("housing.csv")
+    df = pd.read_csv(os.path.join(BASE_DIR, "housing.csv"))
 
-    df["total_bedrooms"].fillna(df["total_bedrooms"].median(), inplace=True)
+    df["total_bedrooms"] = df["total_bedrooms"].fillna(df["total_bedrooms"].median())
 
     df["rooms_per_household"] = df["total_rooms"] / df["households"]
     df["bedrooms_per_household"] = df["total_bedrooms"] / df["households"]
@@ -171,5 +174,5 @@ with st.expander("Coeficientes del Modelo"):
         ],
         "Coeficiente": model.coef_,
     })
-    st.dataframe(coef_df, use_container_width=True)
+    st.dataframe(coef_df, width="stretch")
     st.caption(f"Intercepto: ${model.intercept_:,.0f}")

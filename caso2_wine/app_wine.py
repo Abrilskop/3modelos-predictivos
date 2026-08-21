@@ -1,12 +1,15 @@
+import os
 import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # --- Cargar modelo ---
 @st.cache_resource
 def load_model():
-    data = joblib.load('caso2_wine/modelo_wine.pkl')
+    data = joblib.load(os.path.join(BASE_DIR, 'modelo_wine.pkl'))
     return data
 
 model_data = load_model()
@@ -280,14 +283,14 @@ input_values['chlorides'] = st.sidebar.slider(
 
 # --- Funcion de prediccion ---
 def predict_quality(values):
-    X_input = np.array([[
+    X_input = pd.DataFrame([[
         values['alcohol'],
         values['volatile acidity'],
         values['sulphates'],
         values['citric acid'],
         values['density'],
         values['chlorides']
-    ]])
+    ]], columns=features)
     X_scaled = scaler.transform(X_input)
     if degree > 1:
         poly = model_data['poly']
@@ -464,7 +467,7 @@ st.dataframe(df_input.style.format({
     'citric acid': '{:.2f}',
     'density': '{:.3f}',
     'chlorides': '{:.3f}'
-}).set_properties(**{'text-align': 'center'}), use_container_width=True)
+}).set_properties(**{'text-align': 'center'}), width="stretch")
 
 # --- FOOTER ---
 st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
