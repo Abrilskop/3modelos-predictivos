@@ -1,16 +1,20 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-st.set_page_config(page_title="Simulador de Precios - California Housing", layout="wide")
+st.set_page_config(page_title="Simulador de Precios Polinomial - California Housing", layout="wide")
 
 st.title("Simulador de Precios de Viviendas en California")
-st.markdown("Modelo de **Regresión Lineal Múltiple** entrenado con el dataset California Housing (Census 1990).")
+st.markdown(
+    "Modelo de **Regresión Polinomial** entrenado con el dataset California Housing (Census 1990). "
+    "Selecciona el grado del polinomio para ajustar la complejidad del modelo."
+)
 
 
 @st.cache_data
@@ -48,20 +52,48 @@ X, y, df_full, feature_names = load_and_process_data()
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+st.sidebar.header("Configuración del Modelo")
+degree = st.sidebar.slider(
+    "Grado del polinomio",
+    min_value=2,
+    max_value=4,
+    value=2,
+    step=1,
+    help="Mayor grado = modelo más complejo. Grado 2 es el recomendado."
+)
 
-y_pred = model.predict(X_test)
+alpha = st.sidebar.slider(
+    "Alpha (regularización Ridge)",
+    min_value=0.01,
+    max_value=100.0,
+    value=1.0,
+    step=0.1,
+    help="Controla la regularización para evitar overfitting."
+)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+poly = PolynomialFeatures(degree=degree, include_bias=False)
+X_train_poly = poly.fit_transform(X_train_scaled)
+X_test_poly = poly.transform(X_test_scaled)
+
+model = Ridge(alpha=alpha)
+model.fit(X_train_poly, y_train)
+
+y_pred = model.predict(X_test_poly)
 
 r2 = r2_score(y_test, y_pred)
 mae = mean_absolute_error(y_test, y_pred)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 
 st.header("Métricas del Modelo (Conjunto de Prueba)")
-col1, col2, col3 = st.columns(3)
-col1.metric("R² Score", f"{r2:.4f}", help="Proporción de varianza explicada")
-col2.metric("MAE", f"${mae:,.0f}", help="Error Absoluto Medio en USD")
-col3.metric("RMSE", f"${rmse:,.0f}", help="Raíz del Error Cuadrático Medio en USD")
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Grado Polynomial", f"{degree}")
+col2.metric("R² Score", f"{r2:.4f}", help="Proporción de varianza explicada")
+col3.metric("MAE", f"${mae:,.0f}", help="Error Absoluto Medio en USD")
+col4.metric("RMSE", f"${rmse:,.0f}", help="Raíz del Error Cuadrático Medio en USD")
 
 st.divider()
 
@@ -113,7 +145,9 @@ input_data = pd.DataFrame([{
     "latitude": latitude,
 }])
 
-prediction = model.predict(input_data)[0]
+input_scaled = scaler.transform(input_data)
+input_poly = poly.transform(input_scaled)
+prediction = model.predict(input_poly)[0]
 
 st.divider()
 
@@ -132,7 +166,7 @@ st.divider()
 
 st.header("Gráfico: Valor Real vs Predicho")
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.scatter(y_test, y_pred, alpha=0.3, s=10, color="steelblue")
+ax.scatter(y_test, y_pred, alpha=0.3, s=10, color="darkorange")
 min_val = min(y_test.min(), y_pred.min())
 max_val = max(y_test.max(), y_pred.max())
 ax.plot([min_val, max_val], [min_val, max_val], "r--", lw=2, label="Predicción perfecta")
@@ -146,7 +180,7 @@ ax.xaxis.set_major_formatter(FuncFormatter(dollars_formatter))
 ax.yaxis.set_major_formatter(FuncFormatter(dollars_formatter))
 ax.set_xlabel("Valor Real (USD)")
 ax.set_ylabel("Valor Predicho (USD)")
-ax.set_title("Real vs Predicho")
+ax.set_title("Real vs Predicho (Regresión Polinomial)")
 ax.legend()
 st.pyplot(fig)
 
@@ -158,18 +192,9 @@ st.caption(
 
 st.divider()
 
-with st.expander("Coeficientes del Modelo"):
-    coef_df = pd.DataFrame({
-        "Descriptor": [
-            "Antigüedad (años)",
-            "Cuartos/hogar",
-            "Dormitorios/hogar",
-            "Cercanía al mar",
-            "Ingreso medio",
-            "Longitud",
-            "Latitud",
-        ],
-        "Coeficiente": model.coef_,
-    })
-    st.dataframe(coef_df, use_container_width=True)
+with st.expander("Información del Modelo Polinomial"):
+    st.write(f"**Grado del polinomio:** {degree}")
+    st.write(f"**Alpha (regularización Ridge):** {alpha}")
+    st.write(f"**Número de features originales:** {len(feature_names)}")
+    st.write(f"**Número de features polinomiales:** {X_train_poly.shape[1]}")
     st.caption(f"Intercepto: ${model.intercept_:,.0f}")
