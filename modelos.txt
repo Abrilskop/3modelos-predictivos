@@ -1,0 +1,1 @@
+https://modelospredictivos-c78uxfmnpucmoeulmwt7fe.streamlit.app/wine-quality 
